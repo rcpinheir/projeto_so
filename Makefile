@@ -24,9 +24,6 @@ gerir_prcss.o: ligacao.h gerir_prcss.c
 
 output.o: ligacao.h output.c
 	$(CC) $(FLAGS) output.c
-
-
-
 clean limpar:
 	rm -f projeto_so *.o
 	rm -f *~
