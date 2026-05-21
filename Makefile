@@ -3,7 +3,7 @@
 CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
-OBS=main.o cpu.o memoria.o gerir_prcss.o process.o #output.o
+OBS=main.o cpu.o memoria.o gerir_prcss.o process.o output.o
 
 all: projeto_so
 
@@ -22,8 +22,10 @@ process.o: ligacao.h process.c
 gerir_prcss.o: ligacao.h gerir_prcss.c
 	$(CC) $(FLAGS) gerir_prcss.c
 
-# output.o: ligacao.h output.c
-# 	$(CC) $(FLAGS) output.c
+output.o: ligacao.h output.c
+	$(CC) $(FLAGS) output.c
+
+
 
 clean limpar:
 	rm -f projeto_so *.o

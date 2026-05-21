@@ -3,6 +3,21 @@
 #include "ligacao.h"
 #include <stdlib.h>
 
+void desbloquear_processos() {
+
+    for (int i = 0; i < num_processos; i++) {
+
+        if (tabela[i].state == BLOQUEADO) {
+
+            if (rand() % 2 == 0) {
+
+                tabela[i].state = PRONTO;
+
+                printf("PID=%d desbloqueado\n", tabela[i].pid);
+            }
+        }
+    }
+}
 
 // Instrução C
 int clonar_processo(PCB *pai) {

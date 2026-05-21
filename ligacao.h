@@ -86,3 +86,6 @@ int executar_processo(int idx, int quantum_exec, int tempo_inicio);
 void desbloquear_processos();
 
 void executa_por_tempo(int unidades);
+void relatorio();
+void estatisticas_globais();
+void lancar_chegados();

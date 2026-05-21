@@ -34,6 +34,7 @@ int executar_processo(int idx, int quantum_exec, int tempo_inicio) {
 
 void executa_por_tempo(int unidades) {
     int tempo_global = 0;  
+    
     int restantes = unidades;
 
     while (restantes > 0) {
