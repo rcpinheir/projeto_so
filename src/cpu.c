@@ -2,6 +2,36 @@
 #include <string.h>
 #include "ligacao.h"
 
+static FILE *abrir_programa(const char *nome, char *caminho, int tam_caminho) {
+    const char *prefixos[] = {"programs/", ""};
+    char base[256];
+    const char *candidatos[4];
+    int n = 0;
+
+    strncpy(base, nome, sizeof(base) - 1);
+    base[sizeof(base) - 1] = '\0';
+
+    if (strstr(base, ".prg") == NULL) {
+        size_t len = strlen(base);
+        if (len + 4 < sizeof(base))
+            strcat(base, ".prg");
+    }
+
+    candidatos[n++] = base;
+    if (strcmp(base, nome) != 0)
+        candidatos[n++] = nome;
+
+    for (int p = 0; prefixos[p]; p++) {
+        for (int i = 0; i < n; i++) {
+            snprintf(caminho, tam_caminho, "%s%s", prefixos[p], candidatos[i]);
+            FILE *f = fopen(caminho, "r");
+            if (f)
+                return f;
+        }
+    }
+    return NULL;
+}
+
 
 PCB tabela[MAX_PROCESSOS];
 int num_processos = 0;
@@ -117,7 +147,8 @@ int executar_instrucao(PCB *p, int tempo) {
 }
 
 int carregar_programa(const char *nome_prg, int *base, int *num_inst) {
-    FILE *f = fopen(nome_prg, "r");
+    char caminho[512];
+    FILE *f = abrir_programa(nome_prg, caminho, sizeof(caminho));
     if (!f) return -1;
 
     char linha[256];

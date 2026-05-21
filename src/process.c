@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-#include "ligacao.h"
 #include <stdlib.h>
+#include <time.h>
+#include "ligacao.h"
 
 void desbloquear_processos() {
+    static int seeded = 0;
+    if (!seeded) {
+        srand((unsigned)time(NULL));
+        seeded = 1;
+    }
 
     for (int i = 0; i < num_processos; i++) {
 
@@ -57,28 +63,21 @@ int clonar_processo(PCB *pai) {
 
 // Instrução L
 int substituir_programa(PCB *p, const char *nome_ficheiro) {
-
-    char nome_completo[256];
-
-    snprintf(nome_completo, sizeof(nome_completo),"%s.prg", nome_ficheiro);
-
     int nova_base, novas_instrucoes;
-    
-    if (carregar_programa(nome_ficheiro, &nova_base, &novas_instrucoes) != 0) {
-        return -1; 
-    }
+
+    if (carregar_programa(nome_ficheiro, &nova_base, &novas_instrucoes) != 0)
+        return -1;
 
     int base_antiga = p->base;
     int tamanho_antigo = p->num_instrucoes;
 
-    strcpy(p->nome, nome_ficheiro);
+    strncpy(p->nome, nome_ficheiro, sizeof(p->nome) - 1);
+    p->nome[sizeof(p->nome) - 1] = '\0';
 
     p->base = nova_base;
     p->pc = nova_base;
     p->num_instrucoes = novas_instrucoes;
 
     libertar_memoria(base_antiga, tamanho_antigo);
-    p->num_instrucoes = novas_instrucoes;
-
-    return 0; 
+    return 0;
 }

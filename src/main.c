@@ -20,7 +20,12 @@ static void lancar_chegados() {
             if (carregar_programa(pendentes[i].nome, &base, &num_inst) == 0) {
                 int pid = criar_processo(pendentes[i].nome, 0, base, num_inst,
                                         pendentes[i].prioridade, pendentes[i].prazo, 0, base);
-                if (pid > 0) tabela[pid-1].tempo_chegada = pendentes[i].tempo_chegada;
+                if (pid > 0) {
+                    PCB *np = &tabela[pid - 1];
+                    np->tempo_chegada = pendentes[i].tempo_chegada;
+                    np->deadline = pendentes[i].tempo_chegada + pendentes[i].prazo;
+                    np->periodo = pendentes[i].prazo;
+                }
                 else libertar_memoria(base, num_inst);
             }
             pendentes[i].lancado = 1;
@@ -47,8 +52,8 @@ int main(int argc, char *argv[]) {
     }
 
 
-    // Ler programas a executar do plan.txt
-    FILE *plan = fopen("plan.txt", "r");
+    FILE *plan = fopen("data/plan.txt", "r");
+    if (!plan) plan = fopen("plan.txt", "r");
     if (plan) {
         char pl[256];
         while (fgets(pl, sizeof(pl), plan) && num_pendentes < 100) {
@@ -64,15 +69,15 @@ int main(int argc, char *argv[]) {
     }
 
     if (num_pendentes == 0) {
-        printf("Nenhum processo carregado do plan.txt.\n");
+        printf("Nenhum processo carregado (data/plan.txt ou plan.txt).\n");
         return 0;
     }
 
     // Lançar processos que chegam no tempo 0
     lancar_chegados();
 
-    // Ler comandos do control.txt (se existir), senao do stdin
-    FILE *cmd_file = fopen("control.txt", "r");
+    FILE *cmd_file = fopen("data/control.txt", "r");
+    if (!cmd_file) cmd_file = fopen("control.txt", "r");
     if (!cmd_file) cmd_file = stdin;
 
     char cmd[256];
