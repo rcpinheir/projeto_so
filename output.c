@@ -58,6 +58,6 @@ void estatisticas_globais() {
         }
     }
     if (n > 0)
-        printf("Turnaround medio: %.2f\n", (double)total / n);
+        printf("Turn around medio: %.2f\n", (double)total / n);
     printf("\n");
 }
