@@ -115,6 +115,8 @@ int main(int argc, char *argv[]) {
         cmd[strcspn(cmd, "\n")] = '\0';
         if (cmd[0] == '\0' || cmd[0] == '#') continue;
 
+        printf("\n>>> Comando inserido: %s\n", cmd);
+
         switch (cmd[0]) {
             case 'E': {
                 int n = quantum;
@@ -136,6 +138,7 @@ int main(int argc, char *argv[]) {
                 relatorio();
                 break;
             case 'T':
+                if (cmd_file != stdin) fclose(cmd_file);
                 estatisticas_globais();
                 return 0;
             default:

@@ -1,3 +1,5 @@
-p1.prg
-filho1.prg
-filho2.prg
+E 100
+R
+E 100
+R
+T
