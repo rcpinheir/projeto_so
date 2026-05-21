@@ -17,7 +17,11 @@ static int num_pendentes = 0;
             if (carregar_programa(pendentes[i].nome, &base, &num_inst) == 0) {
                 int pid = criar_processo(pendentes[i].nome, 0, base, num_inst,
                                         pendentes[i].prioridade, pendentes[i].prazo, 0, base);
-                if (pid > 0) tabela[pid-1].tempo_chegada = pendentes[i].tempo_chegada;
+                if (pid > 0) {
+                    tabela[pid-1].tempo_chegada = pendentes[i].tempo_chegada;
+                    printf("[t=%d] Processo %d: %s criado (prioridade=%d, prazo=%d)\n", 
+                           tempo_global, pid, pendentes[i].nome, pendentes[i].prioridade, pendentes[i].prazo);
+                }
                 else libertar_memoria(base, num_inst);
             }
             pendentes[i].lancado = 1;
@@ -102,6 +106,9 @@ int main(int argc, char *argv[]) {
         printf("Nenhum processo carregado do plan.txt.\n");
         return 0;
     }
+
+    printf("=> %d processos carregados de 'plan.txt' para a lista de chegadas pendentes.\n", num_pendentes);
+    printf("=> A aguardar comandos (E, I, D, R, T)...\n");
 
     // Lançar processos que chegam no tempo 0
     lancar_chegados();
