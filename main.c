@@ -44,44 +44,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    // Gestor (PID 0) lê control.txt e cria processos ----
-    FILE *ctrl = fopen("control.txt", "r");
-    if (!ctrl) {
-        printf("control.txt não encontrado\n");
-        return 1;
-    }
 
-    char linha[256];
-    while (fgets(linha, sizeof(linha), ctrl) && num_processos < MAX_PROCESSOS) {
-        linha[strcspn(linha, "\n")] = '\0';
-        if (linha[0] == '\0') continue;
-
-        char nome[256];
-        int prio = 5, prazo = 100;
-        sscanf(linha, "%s %d %d", nome, &prio, &prazo);
-
-        int base, num_inst;
-        if (carregar_programa(nome, &base, &num_inst) != 0) {
-            printf("Erro ao carregar %s\n", nome);
-            continue;
-        }
-        int pid = criar_processo(nome, 0, base, num_inst, prio, prazo, 0, base);
-        if (pid == -1) {
-            printf("Limite de processos\n");
-            libertar_memoria(base, num_inst);
-        } else {
-            printf("Processo %d: %s (base=%d, %d instr)\n", pid, nome, base, num_inst);
-        }
-    }
-    fclose(ctrl);
-
-    if (num_processos == 0) {
-        printf("Nenhum processo carregado.\n");
-        return 0;
-    }
-
-    // round‑robin
-    executa_por_tempo(100);
     // Ler programas a executar do plan.txt
     FILE *plan = fopen("plan.txt", "r");
     if (plan) {
